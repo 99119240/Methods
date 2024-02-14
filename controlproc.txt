@@ -1,0 +1,4 @@
+## To control a process we can use a .net dll to run C# code inside the injected process normally any normal proc like spotify.exe is not going to have any anti dll injection meaning we can search for all the exes inject our .net dll into them and open multiable ways of contact
+
+## Possible
+We can use the injected dll to act as a signed file since its in spotify.exe we might be able to exploit that to make it get higher priv - privlage ecslation or bypass anti virus by running shell code
