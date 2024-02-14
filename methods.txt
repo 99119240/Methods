@@ -1,0 +1,40 @@
+LoadLibrary Function
+CreateRemoteThread
+Manual Mapping
+Reflective DLL Injection
+Thread Hijacking
+SetWindowsHookEx
+AppInit_DLLs Registry Key
+APC (Asynchronous Procedure Call) Injection
+Process Hollowing
+Thread Local Storage (TLS) Callbacks
+QueueUserAPC
+Early Bird Injection
+AtomBombing
+Memory-mapped File Injection
+COM Hijacking
+Shimming
+IAT (Import Address Table) Hooking
+LdrLoadDll Callback
+Detours
+Memory Injection through Portable Executable (PE) Manipulation
+Heap Injection
+PowerShell Injection
+Direct Kernel Object Manipulation
+Process Environment Block (PEB) Modification
+COM Interface Pointer Spoofing
+Environmental Keying
+Thread State Modification
+Hot Patching
+Function Pointer Overwrite
+Memory Stealth Injection
+Shellcode Injection
+Thread Pool Injection
+Unlinking
+Remote DLL Loading
+PE Header Overwrite
+VirtualAllocEx / WriteProcessMemory
+IAT/EAT (Export Address Table) Redirection
+Anti-Emulation Techniques
+Return-Oriented Programming (ROP)
+Memory Compression
